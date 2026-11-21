@@ -1,0 +1,89 @@
+name: Deploy Kopi Kenangan Prototypes to GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Build Prototype 1
+        working-directory: Prototype 1
+        run: |
+          npm ci
+          npm run build
+
+      - name: Build Prototype 2
+        working-directory: Prototype 2
+        run: |
+          npm ci
+          npm run build
+
+      - name: Assemble Pages artifact
+        run: |
+          mkdir -p _site/prototype-1 _site/prototype-2
+          cp -r "Prototype 1/dist/"* _site/prototype-1/
+          cp -r "Prototype 2/dist/"* _site/prototype-2/
+          cat << 'EOF' > _site/index.html
+          <!doctype html>
+          <html lang="id">
+            <head>
+              <meta charset="UTF-8" />
+              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+              <title>Kopi Kenangan — High-Fidelity Prototypes (Kelompok 9)</title>
+              <style>
+                body { font-family: system-ui, -apple-system, sans-serif; background: #FAF7F2; color: #2B1B17; margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+                .card { background: #fff; border: 1px solid #E7DFD5; border-radius: 24px; padding: 28px; max-width: 440px; width: 100%; box-shadow: 0 16px 40px rgba(43,27,23,0.08); }
+                h1 { font-size: 20px; margin: 0 0 8px; }
+                p { font-size: 14px; color: #6B5A53; margin: 0 0 20px; line-height: 1.5; }
+                a { display: block; text-decoration: none; padding: 14px 18px; border-radius: 14px; font-weight: 700; font-size: 14px; margin-bottom: 12px; }
+                .p1 { background: #2B1B17; color: #FAF7F2; }
+                .p2 { background: #C83228; color: #fff; }
+                span { display: block; font-size: 12px; font-weight: 400; opacity: 0.85; margin-top: 4px; }
+              </style>
+            </head>
+            <body>
+              <div class="card">
+                <h1>Prototype Kopi Kenangan</h1>
+                <p>Pilih salah satu prototype di bawah ini untuk memulai sesi Usability Testing:</p>
+                <a class="p1" href="./prototype-1/">Prototype 1 — Express Hub (M3)<span>5 Tab Navigasi • Warm Espresso &amp; Cream • Bottom Sheets</span></a>
+                <a class="p2" href="./prototype-2/">Prototype 2 — Minimalist Guided Flow (HIG)<span>3 Tab Navigasi • Direct-to-Menu • Full-Screen Customizer</span></a>
+              </div>
+            </body>
+          </html>
+          EOF
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
