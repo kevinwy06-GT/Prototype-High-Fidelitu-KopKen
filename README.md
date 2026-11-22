@@ -21,3 +21,8 @@ cd "Prototype 2"
 npm install
 npm run dev
 ```
+
+## Fitur Kamera Ketersediaan Tempat (Parkir & Meja)
+- Gerai standalone (Siwalankerto, Jemursari) → **Kamera Parkir**; gerai di mall (Petra Square, Tunjungan Plaza 3) → **Kamera Meja**.
+- Badge `Tersedia / Terbatas / Penuh` (warna + ikon + teks) muncul di daftar gerai dan di Beranda/Pesan; tombol **Lihat kamera** membuka tampilan kamera.
+- Tampilan kamera disimulasikan dari data dummy statis (`space.layout` di `src/data/mockData.js`, X = terisi, O = kosong), bukan video asli. Kode: `CameraScene.jsx`, `SpaceBadge.jsx`, `CameraSheet.jsx` (P1) / `CameraModal.jsx` (P2).

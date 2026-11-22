@@ -11,6 +11,7 @@ export const OUTLETS = [
     estMinutes: 11,
     openHours: '07.00 – 22.00',
     outOfStockIds: ['matcha-latte', 'almond-croissant'],
+    space: { type: 'parking', layout: 'XXOXXXXOXXOX', camera: 'Kamera Parkir Depan Ruko' },
   },
   {
     id: 'petra-square',
@@ -24,6 +25,7 @@ export const OUTLETS = [
     estMinutes: 4,
     openHours: '07.00 – 21.00',
     outOfStockIds: ['caramel-macchiato'],
+    space: { type: 'table', layout: 'XOXOOXOX', camera: 'Kamera Area Tempat Duduk' },
   },
   {
     id: 'jemursari',
@@ -37,6 +39,7 @@ export const OUTLETS = [
     estMinutes: 2,
     openHours: '07.00 – 22.00',
     outOfStockIds: [],
+    space: { type: 'parking', layout: 'XOOXOOOXOOOXOOXO', camera: 'Kamera Area Parkir' },
   },
   {
     id: 'tunjungan',
@@ -50,8 +53,33 @@ export const OUTLETS = [
     estMinutes: 15,
     openHours: '10.00 – 22.00',
     outOfStockIds: ['thai-tea'],
+    space: { type: 'table', layout: 'XXXXXXXXXX', camera: 'Kamera Area Tempat Duduk' },
   },
 ]
+
+/**
+ * Ketersediaan tempat per gerai (data dummy statis, identik di Prototype 1 & 2).
+ * layout: 1 karakter = 1 slot parkir / 1 meja. X = terisi, O = kosong.
+ * Gerai standalone -> type 'parking'; gerai di mall -> type 'table'; tanpa fasilitas -> space tidak ada.
+ */
+export function getSpace(outlet) {
+  if (!outlet || !outlet.space) return null
+  const { type, layout, camera } = outlet.space
+  const slots = layout.split('').map((c) => c === 'X')
+  const total = slots.length
+  const free = slots.filter((occupied) => !occupied).length
+  const status = free === 0 ? 'Penuh' : free / total <= 0.25 ? 'Terbatas' : 'Tersedia'
+  return {
+    type,
+    camera,
+    slots,
+    total,
+    free,
+    status,
+    label: type === 'parking' ? 'Parkir' : 'Meja',
+    noun: type === 'parking' ? 'slot parkir' : 'meja',
+  }
+}
 
 export const MENU_ITEMS = [
   {

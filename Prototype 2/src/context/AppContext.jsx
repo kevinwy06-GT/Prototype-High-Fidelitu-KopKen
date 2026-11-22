@@ -42,6 +42,7 @@ export function AppProvider({ children }) {
   const [customizingItem, setCustomizingItem] = useState(null)
   const [checkoutOpen, setCheckoutOpen] = useState(false)
   const [outletModalOpen, setOutletModalOpen] = useState(false)
+  const [cameraOutletId, setCameraOutletId] = useState(null)
   const [queueDrawerOpen, setQueueDrawerOpen] = useState(false)
   const [scanModalOpen, setScanModalOpen] = useState(false)
   const [toast, setToast] = useState(null)
@@ -294,6 +295,8 @@ export function AppProvider({ children }) {
         setCheckoutOpen,
         outletModalOpen,
         setOutletModalOpen,
+        cameraOutletId,
+        setCameraOutletId,
         queueDrawerOpen,
         setQueueDrawerOpen,
         scanModalOpen,

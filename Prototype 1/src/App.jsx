@@ -2,6 +2,7 @@ import React from 'react'
 import { AppProvider, useApp } from './context/AppContext'
 import MobileShell from './components/MobileShell'
 import OutletSheet from './components/OutletSheet'
+import CameraSheet from './components/CameraSheet'
 import CustomizeSheet from './components/CustomizeSheet'
 import VoucherSheet from './components/VoucherSheet'
 import ScanMemberModal from './components/ScanMemberModal'
@@ -26,6 +27,7 @@ function AppContent() {
       {/* Overlays & M3 Bottom Sheets */}
       <CartCheckoutPage />
       <OutletSheet />
+      <CameraSheet />
       <CustomizeSheet />
       <VoucherSheet />
       <ScanMemberModal />

@@ -38,6 +38,7 @@ export function AppProvider({ children }) {
 
   // Modals & Bottom Sheets
   const [outletSheetOpen, setOutletSheetOpen] = useState(false)
+  const [cameraOutletId, setCameraOutletId] = useState(null)
   const [customizingItem, setCustomizingItem] = useState(null)
   const [voucherSheetOpen, setVoucherSheetOpen] = useState(false)
   const [scanModalOpen, setScanModalOpen] = useState(false)
@@ -277,6 +278,8 @@ export function AppProvider({ children }) {
         setDeliveryAddress,
         outletSheetOpen,
         setOutletSheetOpen,
+        cameraOutletId,
+        setCameraOutletId,
         customizingItem,
         setCustomizingItem,
         voucherSheetOpen,

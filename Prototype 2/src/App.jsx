@@ -2,6 +2,7 @@ import React from 'react'
 import { AppProvider, useApp } from './context/AppContext'
 import MobileShell from './components/MobileShell'
 import OutletModal from './components/OutletModal'
+import CameraModal from './components/CameraModal'
 import QueueDrawer from './components/QueueDrawer'
 import ScanMemberModal from './components/ScanMemberModal'
 import OrderHomePage from './pages/OrderHomePage'
@@ -23,6 +24,7 @@ function AppContent() {
       <CustomizePage />
       <CheckoutPage />
       <OutletModal />
+      <CameraModal />
       <QueueDrawer />
       <ScanMemberModal />
     </MobileShell>

@@ -12,14 +12,17 @@ import {
   Clock,
   Eye,
   AlertCircle,
+  Video,
 } from 'lucide-react'
-import { MENU_ITEMS, formatRp } from '../data/mockData'
+import { MENU_ITEMS, formatRp, getSpace } from '../data/mockData'
+import SpaceBadge from '../components/SpaceBadge'
 import { useApp } from '../context/AppContext'
 
 export default function HomePage() {
   const {
     selectedOutlet,
     setOutletSheetOpen,
+    setCameraOutletId,
     serviceType,
     setServiceType,
     regularOrders,
@@ -40,6 +43,8 @@ export default function HomePage() {
   const featuredItems = MENU_ITEMS.filter((m) =>
     ['kopi-kenangan-mantan', 'kopi-susu-black-aren', 'butter-croissant', 'pain-au-chocolat'].includes(m.id)
   )
+
+  const selectedSpace = getSpace(selectedOutlet)
 
   return (
     <div className="px-4 pt-2 pb-24 space-y-4">
@@ -96,6 +101,18 @@ export default function HomePage() {
         </div>
         <ChevronRight className="w-5 h-5 text-[#9A8B82] shrink-0" />
       </button>
+
+      {selectedSpace && (
+        <button
+          onClick={() => setCameraOutletId(selectedOutlet.id)}
+          className="w-full -mt-1 p-3 rounded-2xl bg-white border border-[#E7DFD5] flex items-center justify-between gap-2 active:scale-[0.99] transition-transform"
+        >
+          <SpaceBadge outlet={selectedOutlet} />
+          <span className="text-xs font-bold text-[#C83228] flex items-center gap-1 shrink-0">
+            <Video className="w-4 h-4" /> Lihat kamera
+          </span>
+        </button>
+      )}
 
       {/* Pick-up / Delivery Switcher */}
       <div className="grid grid-cols-2 gap-2 p-1 bg-[#EFE7DD] rounded-2xl">

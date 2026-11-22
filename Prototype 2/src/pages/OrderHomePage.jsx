@@ -10,8 +10,10 @@ import {
   Plus,
   AlertCircle,
   Users,
+  Video,
 } from 'lucide-react'
-import { MENU_ITEMS, SCHEDULE_SLOTS, formatRp } from '../data/mockData'
+import { MENU_ITEMS, SCHEDULE_SLOTS, formatRp, getSpace } from '../data/mockData'
+import SpaceBadge from '../components/SpaceBadge'
 import { useApp } from '../context/AppContext'
 
 const CATEGORIES = ['Semua', 'Kopi', 'Non-Kopi', 'Pastry']
@@ -20,6 +22,7 @@ export default function OrderHomePage() {
   const {
     selectedOutlet,
     setOutletModalOpen,
+    setCameraOutletId,
     serviceType,
     setServiceType,
     scheduleSlot,
@@ -46,6 +49,8 @@ export default function OrderHomePage() {
   })
 
   const activeSlotLabel = SCHEDULE_SLOTS.find((s) => s.id === scheduleSlot)?.label || 'Ambil Sekarang'
+
+  const selectedSpace = getSpace(selectedOutlet)
 
   return (
     <div className="px-4 pt-2 pb-36 space-y-4">
@@ -91,6 +96,18 @@ export default function OrderHomePage() {
           </button>
         </div>
       </div>
+
+      {selectedSpace && (
+        <button
+          onClick={() => setCameraOutletId(selectedOutlet.id)}
+          className="w-full -mt-2 flex items-center justify-between gap-2 py-1 active:opacity-70"
+        >
+          <SpaceBadge outlet={selectedOutlet} />
+          <span className="text-[11px] font-bold text-[#D62828] flex items-center gap-1 shrink-0">
+            <Video className="w-3.5 h-3.5" /> Lihat kamera
+          </span>
+        </button>
+      )}
 
       {/* Quick Action Strip (Scan Member + 1-Tap Regular + Schedule) */}
       <div className="flex gap-2 overflow-x-auto no-scrollbar pb-0.5">

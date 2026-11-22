@@ -1,10 +1,11 @@
 import React from 'react'
-import { X, MapPin, Navigation, Users, Check, Clock } from 'lucide-react'
-import { OUTLETS } from '../data/mockData'
+import { X, MapPin, Navigation, Users, Check, Clock, Video } from 'lucide-react'
+import { OUTLETS, getSpace } from '../data/mockData'
+import SpaceBadge from './SpaceBadge'
 import { useApp } from '../context/AppContext'
 
 export default function OutletModal() {
-  const { outletModalOpen, setOutletModalOpen, selectedOutletId, setSelectedOutletId, showToast } = useApp()
+  const { outletModalOpen, setOutletModalOpen, selectedOutletId, setSelectedOutletId, setCameraOutletId, showToast } = useApp()
 
   if (!outletModalOpen) return null
 
@@ -34,17 +35,21 @@ export default function OutletModal() {
               ? 'bg-[#FEF3C7] text-[#B45309]'
               : 'bg-[#FEE2E2] text-[#B91C1C]'
 
+          const space = getSpace(outlet)
           return (
-            <button
+            <div
               key={outlet.id}
+              className={`rounded-2xl border-2 transition-all ${
+                isSelected ? 'border-[#141414] bg-[#FAFAFA]' : 'border-[#E5E7EB] bg-white'
+              }`}
+            >
+            <button
               onClick={() => {
                 setSelectedOutletId(outlet.id)
                 setOutletModalOpen(false)
                 showToast(`Gerai aktif: ${outlet.name}`, 'info')
               }}
-              className={`w-full text-left p-4 rounded-2xl border-2 transition-all ${
-                isSelected ? 'border-[#141414] bg-[#FAFAFA]' : 'border-[#E5E7EB] bg-white'
-              }`}
+              className="w-full text-left p-4 pb-3"
             >
               <div className="flex items-start justify-between gap-2">
                 <div>
@@ -75,6 +80,12 @@ export default function OutletModal() {
                 </span>
               </div>
 
+              {space && (
+                <div className="mt-2">
+                  <SpaceBadge outlet={outlet} />
+                </div>
+              )}
+
               <div className="mt-2 pt-2 border-t border-[#F3F4F6] flex items-center justify-between text-[11px] text-[#6B7280]">
                 <span className="flex items-center gap-1">
                   <Clock className="w-3 h-3" /> {outlet.openHours}
@@ -86,6 +97,16 @@ export default function OutletModal() {
                 </span>
               </div>
             </button>
+            {space && (
+              <button
+                onClick={() => setCameraOutletId(outlet.id)}
+                className="mx-4 mb-4 w-[calc(100%-2rem)] min-h-[44px] rounded-full bg-[#F3F4F6] text-[#141414] text-xs font-bold flex items-center justify-center gap-1.5 active:scale-[0.99] transition-transform"
+              >
+                <Video className="w-4 h-4 text-[#D62828]" />
+                Lihat kamera {space.type === 'parking' ? 'parkir' : 'meja'}
+              </button>
+            )}
+            </div>
           )
         })}
       </div>

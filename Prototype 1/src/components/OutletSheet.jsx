@@ -1,6 +1,7 @@
 import React from 'react'
-import { X, MapPin, Navigation, Users, CheckCircle2, Clock } from 'lucide-react'
-import { OUTLETS } from '../data/mockData'
+import { X, MapPin, Navigation, Users, CheckCircle2, Clock, Video } from 'lucide-react'
+import { OUTLETS, getSpace } from '../data/mockData'
+import SpaceBadge from './SpaceBadge'
 import { useApp } from '../context/AppContext'
 
 function CrowdBadge({ crowd, estMinutes }) {
@@ -20,7 +21,7 @@ function CrowdBadge({ crowd, estMinutes }) {
 }
 
 export default function OutletSheet() {
-  const { outletSheetOpen, setOutletSheetOpen, selectedOutletId, setSelectedOutletId, showToast } = useApp()
+  const { outletSheetOpen, setOutletSheetOpen, selectedOutletId, setSelectedOutletId, setCameraOutletId, showToast } = useApp()
 
   if (!outletSheetOpen) return null
 
@@ -44,19 +45,21 @@ export default function OutletSheet() {
         <div className="p-4 space-y-3 overflow-y-auto no-scrollbar">
           {OUTLETS.map((outlet) => {
             const isSelected = outlet.id === selectedOutletId
+            const space = getSpace(outlet)
             return (
-              <button
+              <div
                 key={outlet.id}
+                className={`rounded-2xl border-2 transition-all bg-white ${
+                  isSelected ? 'border-[#C83228] shadow-sm' : 'border-transparent hover:border-[#D7C9BA]'
+                }`}
+              >
+              <button
                 onClick={() => {
                   setSelectedOutletId(outlet.id)
                   setOutletSheetOpen(false)
                   showToast(`Gerai diubah ke ${outlet.name}`, 'info')
                 }}
-                className={`w-full text-left p-4 rounded-2xl border-2 transition-all ${
-                  isSelected
-                    ? 'bg-white border-[#C83228] shadow-sm'
-                    : 'bg-white border-transparent hover:border-[#D7C9BA]'
-                }`}
+                className="w-full text-left p-4 pb-3"
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-2 flex-wrap">
@@ -81,6 +84,12 @@ export default function OutletSheet() {
                   <CrowdBadge crowd={outlet.crowd} estMinutes={outlet.estMinutes} />
                 </div>
 
+                {space && (
+                  <div className="mt-2">
+                    <SpaceBadge outlet={outlet} />
+                  </div>
+                )}
+
                 <div className="mt-2 pt-2 border-t border-[#F3ECE3] flex items-center justify-between text-[11px] text-[#6B5A53]">
                   <span className="flex items-center gap-1">
                     <Clock className="w-3 h-3" /> Buka {outlet.openHours}
@@ -92,6 +101,16 @@ export default function OutletSheet() {
                   </span>
                 </div>
               </button>
+              {space && (
+                <button
+                  onClick={() => setCameraOutletId(outlet.id)}
+                  className="mx-4 mb-4 w-[calc(100%-2rem)] min-h-[44px] rounded-xl border border-[#D7C9BA] text-[#2B1B17] text-xs font-bold flex items-center justify-center gap-1.5 hover:bg-[#F3ECE3] active:scale-[0.99] transition-all"
+                >
+                  <Video className="w-4 h-4 text-[#C83228]" />
+                  Lihat kamera {space.type === 'parking' ? 'parkir' : 'meja'}
+                </button>
+              )}
+              </div>
             )
           })}
         </div>
